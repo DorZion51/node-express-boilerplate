@@ -1,5 +1,3 @@
-import { ServiceConfiguration } from './Configuration.json';
-
 export enum CustomRequestHeaders {
     requestId = 'requestId',
     requestingActorId = 'requestingActorId',
@@ -9,44 +7,15 @@ export enum CustomRequestHeaders {
 export interface Configuration {
     serverPort: string;
     currentEnv: string;
+    dbConnection: string;
+    dbName: string;
+    gamesCollection: string;
 }
 
-export const getConfiguration = (env: NodeJS.ProcessEnv = process.env): Configuration => {
-    const currentEnv = env.CURRENT_ENV || 'local';
-    const localConfig: Partial<Configuration> =
-        currentEnv === 'local'
-            ? {
-                  serverPort: '5000',
-              }
-            : { serverPort: '8080' };
-
-    if (currentEnv === 'dev') {
-        return {
-            currentEnv,
-            ...ServiceConfiguration.common,
-            ...ServiceConfiguration.dev,
-            ...localConfig,
-        };
-    } else if (currentEnv === 'test') {
-        return {
-            currentEnv,
-            ...ServiceConfiguration.common,
-            ...ServiceConfiguration.test,
-            ...localConfig,
-        };
-    } else if (currentEnv === 'prod') {
-        return {
-            currentEnv,
-            ...ServiceConfiguration.common,
-            ...ServiceConfiguration.prod,
-            ...localConfig,
-        };
-    } else {
-        return {
-            currentEnv,
-            ...ServiceConfiguration.common,
-            ...ServiceConfiguration.local,
-            ...localConfig,
-        };
-    }
-};
+export const getConfiguration = (env: NodeJS.ProcessEnv = process.env): Configuration => ({
+    currentEnv: env.CURRENT_ENV || 'local',
+    serverPort: env.SERVER_PORT || '5000',
+    dbConnection: env.DB_CONN_STRING || 'mongodb://localhost:27017',
+    dbName: env.DB_NAME || 'demo',
+    gamesCollection: env.GAMES_COLLECTION_NAME || 'games',
+});

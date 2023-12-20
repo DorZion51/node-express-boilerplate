@@ -6,6 +6,7 @@ import { Server } from 'http';
 import responseTime from 'response-time';
 import { Configuration, getConfiguration } from './configuration/Configuration';
 import { logger } from './configuration/logging/Logger';
+import { connectToDatabase } from './db/Provider';
 import { getCorsMiddleware } from './middleware/CorsMiddleware';
 import { getLogMiddleware } from './middleware/LogMiddleware';
 import { getExampleRouter } from './routers/ExampleRouter';
@@ -26,24 +27,31 @@ export interface Application {
     server: Server;
 }
 
-export const initiateApp = async (env?: NodeJS.ProcessEnv): Promise<Application> => {
+export const initiateApp = async (env?: NodeJS.ProcessEnv): Promise<void> => {
     dotenv.config(); // enable reading environment variables from .env file
     const app: express.Application = express();
     const configuration: Configuration = getConfiguration(env);
-    applyMiddlewareAndRouters(app, configuration);
+    console.log('here');
 
-    logger(getConfiguration()).log({
-        level: 'info',
-        message: 'Application starts running with this configuration',
-        ...configuration,
-    });
+    connectToDatabase()
+        .then(() => {
+            applyMiddlewareAndRouters(app, configuration);
 
-    const server = app.listen(parseInt(configuration.serverPort), '0.0.0.0', () => {
-        logger(getConfiguration()).log({
-            level: 'info',
-            message: `Server is running on port ${configuration.serverPort}`,
+            logger(getConfiguration()).log({
+                level: 'info',
+                message: 'Application starts running with this configuration',
+                ...configuration,
+            });
+
+            app.listen(parseInt(configuration.serverPort), '0.0.0.0', () => {
+                logger(getConfiguration()).log({
+                    level: 'info',
+                    message: `Server is running on port ${configuration.serverPort}`,
+                });
+            });
+        })
+        .catch((error: Error) => {
+            console.error('Database connection failed', error);
+            process.exit();
         });
-    });
-
-    return { app, server };
 };
