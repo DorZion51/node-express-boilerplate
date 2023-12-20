@@ -1,5 +1,6 @@
 import * as mongoDB from 'mongodb';
 import { getConfiguration } from '../configuration/Configuration';
+import { logger } from '../configuration/logging/Logger';
 import Game from './models/Games';
 export const collections: { games?: mongoDB.Collection<Game> } = {};
 
@@ -16,7 +17,8 @@ export const connectToDatabase = async () => {
 
     collections.games = gamesCollection;
 
-    console.log(
-        `Successfully connected to database: ${db.databaseName} and collection: ${gamesCollection.collectionName}`,
-    );
+    logger(configuration).log({
+        level: 'info',
+        message: `Successfully connected to database: ${db.databaseName} and collection: ${gamesCollection.collectionName}`,
+    });
 };

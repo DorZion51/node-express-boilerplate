@@ -37,21 +37,24 @@ export const initiateApp = async (env?: NodeJS.ProcessEnv): Promise<void> => {
         .then(() => {
             applyMiddlewareAndRouters(app, configuration);
 
-            logger(getConfiguration()).log({
+            logger(configuration).log({
                 level: 'info',
                 message: 'Application starts running with this configuration',
                 ...configuration,
             });
 
             app.listen(parseInt(configuration.serverPort), '0.0.0.0', () => {
-                logger(getConfiguration()).log({
+                logger(configuration).log({
                     level: 'info',
                     message: `Server is running on port ${configuration.serverPort}`,
                 });
             });
         })
         .catch((error: Error) => {
-            console.error('Database connection failed', error);
+            logger(configuration).log({
+                level: 'error',
+                message: `Database connection failed ${error}`,
+            });
             process.exit();
         });
 };
