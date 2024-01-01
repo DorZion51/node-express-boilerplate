@@ -8,7 +8,7 @@ import { Configuration, getConfiguration } from './configuration/Configuration';
 import { logger } from './configuration/logging/Logger';
 import { getCorsMiddleware } from './middleware/CorsMiddleware';
 import { getLogMiddleware } from './middleware/LogMiddleware';
-import { getExampleRouter } from './routers/ExampleRouter';
+import { getApiV1Router } from './routers/ApiV1Router';
 import { getHealthRouter } from './routers/HealthRouter';
 
 const applyMiddlewareAndRouters = (app: express.Application, configuration: Configuration) => {
@@ -18,7 +18,7 @@ const applyMiddlewareAndRouters = (app: express.Application, configuration: Conf
     app.use(getLogMiddleware);
     app.use(getCorsMiddleware(configuration));
     app.use('/health', getHealthRouter());
-    app.use('/example', getExampleRouter());
+    app.use('/api/v1', getApiV1Router());
 };
 
 export interface Application {
