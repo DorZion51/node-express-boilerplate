@@ -6,6 +6,8 @@ export const getExampleRouter = (): Router => {
 
     router.get('/doSomething', exampleController.doSomething);
     router.get('/games', exampleController.getGames);
+    router.post('/register', exampleController.register);
+    router.post('/login', exampleController.login);
 
     return router;
 };

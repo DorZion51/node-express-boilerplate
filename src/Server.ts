@@ -7,6 +7,7 @@ import responseTime from 'response-time';
 import { Configuration, getConfiguration } from './configuration/Configuration';
 import { logger } from './configuration/logging/Logger';
 import { connectToDatabase } from './db/Provider';
+import { AuthenticateUser, RequestWithUserId } from './middleware/AuthMiddleware';
 import { getCorsMiddleware } from './middleware/CorsMiddleware';
 import { getLogMiddleware } from './middleware/LogMiddleware';
 import { getExampleRouter } from './routers/ExampleRouter';
@@ -20,6 +21,11 @@ const applyMiddlewareAndRouters = (app: express.Application, configuration: Conf
     app.use(getCorsMiddleware(configuration));
     app.use('/health', getHealthRouter());
     app.use('/example', getExampleRouter());
+    app.get('/protected', AuthenticateUser, (req: RequestWithUserId, res) => {
+        // Handle protected route logic here
+
+        res.send(`success with user ${req.userId}`);
+    });
 };
 
 export interface Application {

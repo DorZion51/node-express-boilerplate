@@ -10,6 +10,8 @@ export interface Configuration {
     dbConnection: string;
     dbName: string;
     gamesCollection: string;
+    usersCollection: string;
+    jwtSecretKey: string;
 }
 
 export const getConfiguration = (env: NodeJS.ProcessEnv = process.env): Configuration => ({
@@ -18,4 +20,6 @@ export const getConfiguration = (env: NodeJS.ProcessEnv = process.env): Configur
     dbConnection: env.DB_CONN_STRING || 'mongodb://localhost:27017',
     dbName: env.DB_NAME || 'demo',
     gamesCollection: env.GAMES_COLLECTION_NAME || 'games',
+    usersCollection: env.USERS_COLLECTION_NAME || 'users',
+    jwtSecretKey: env.JWT_SECRET_KEY || 'AKONAMATATA',
 });
