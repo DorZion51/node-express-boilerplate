@@ -8,11 +8,11 @@ export interface RequestWithUserId extends Request {
 
 export const AuthenticateUser = (req: RequestWithUserId, res: Response, next: NextFunction) => {
     try {
-        if (req.cookies?.access_token) {
-            // const { authorization } = req.headers;
+        if (req.headers.authorization) {
+            const { authorization } = req.headers;
             // eslint-disable-next-line prefer-destructuring
-            // const token = authorization.split(' ')[1];
-            const token = req.cookies?.access_token;
+            const token = authorization.split(' ')[1];
+
             // Verify the token
             const decodedToken = jwt.verify(token, getConfiguration().jwtAccessSecretKey) as JwtPayload;
 
