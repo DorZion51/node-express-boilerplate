@@ -10,6 +10,7 @@ import { connectToDatabase } from './db/Provider';
 import { AuthenticateUser, RequestWithUserId } from './middleware/AuthMiddleware';
 import { getCorsMiddleware } from './middleware/CorsMiddleware';
 import { getLogMiddleware } from './middleware/LogMiddleware';
+import { getAuthRouter } from './routers/AuthRouter';
 import { getExampleRouter } from './routers/ExampleRouter';
 import { getHealthRouter } from './routers/HealthRouter';
 
@@ -21,6 +22,8 @@ const applyMiddlewareAndRouters = (app: express.Application, configuration: Conf
     app.use(getCorsMiddleware(configuration));
     app.use('/health', getHealthRouter());
     app.use('/example', getExampleRouter());
+    app.use('/auth', getAuthRouter());
+
     app.get('/protected', AuthenticateUser, (req: RequestWithUserId, res) => {
         // Handle protected route logic here
 

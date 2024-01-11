@@ -14,7 +14,7 @@ export const AuthenticateUser = (req: RequestWithUserId, res: Response, next: Ne
             const token = authorization.split(' ')[1];
 
             // Verify the token
-            const decodedToken = jwt.verify(token, getConfiguration().jwtSecretKey) as JwtPayload;
+            const decodedToken = jwt.verify(token, getConfiguration().jwtAccessSecretKey) as JwtPayload;
 
             // Attach the user ID to the request object
             req.userId = decodedToken.userId;

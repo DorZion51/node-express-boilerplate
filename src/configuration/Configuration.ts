@@ -11,7 +11,8 @@ export interface Configuration {
     dbName: string;
     gamesCollection: string;
     usersCollection: string;
-    jwtSecretKey: string;
+    jwtAccessSecretKey: string;
+    jwtRefreshSecretKey: string;
 }
 
 export const getConfiguration = (env: NodeJS.ProcessEnv = process.env): Configuration => ({
@@ -21,5 +22,6 @@ export const getConfiguration = (env: NodeJS.ProcessEnv = process.env): Configur
     dbName: env.DB_NAME || 'demo',
     gamesCollection: env.GAMES_COLLECTION_NAME || 'games',
     usersCollection: env.USERS_COLLECTION_NAME || 'users',
-    jwtSecretKey: env.JWT_SECRET_KEY || 'AKONAMATATA',
+    jwtAccessSecretKey: env.JWT_ACCESS_SECRET_KEY || 'AKONAMATATA',
+    jwtRefreshSecretKey: env.JWT_REFRESH_SECRET_KEY || 'AKONAMATATA',
 });
